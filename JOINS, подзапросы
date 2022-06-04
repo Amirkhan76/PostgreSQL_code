@@ -1,0 +1,33 @@
+--Найти заказчиков и обслуживающих их заказы сотрудников таких, что и заказчики и сотрудники из 
+--города London, а доставка идёт компанией Speedy Express. Вывести компанию заказчика и ФИО сотрудника.
+SELECT customers.company_name, last_name ||''|| first_name AS full_name, shippers.company_name
+FROM orders
+JOIN customers USING(customer_id)
+JOIN employees USING(employee_id)
+JOIN shippers ON orders.ship_via = shippers.shipper_id
+WHERE customers.city = 'London' AND employees.city = 'London' AND shippers.company_name = 'Speedy Express'
+
+--Найти заказчиков, не сделавших ни одного заказа. Вывести имя заказчика и order_id
+SELECT contact_name, order_id
+FROM customers
+LEFT JOIN customers USING(customer_id)
+WHERE order_id IS NULL
+
+--Найти активные (см. поле discontinued) продукты из категории Beverages и Seafood, которых в продаже менее 
+--20 единиц. Вывести наименование продуктов, кол-во единиц в продаже, имя контакта поставщика и его телефонный номер.
+SELECT contact_name, phone, category_name, product_name, units_in_stock, discontinued
+FROM products
+JOIN suppliers USING(supplier_id)
+JOIN categories USING(category_id)
+WHERE category_name IN ('Beverages', 'Seafood') AND discontinued = 0 AND units_in_stock < 20
+
+
+--Вывести продукты количество которых в продаже меньше самого малого среднего количества продуктов в деталях заказов.
+SELECT product_name, units_in_stock
+FROM products
+WHERE units_in_stock < ALL (
+  SELECT AVG(quantity)
+  FROM order_details
+  GROUP BY product_id
+)
+ORDER BY units_in_stock DESC;
