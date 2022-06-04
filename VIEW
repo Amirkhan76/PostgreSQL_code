@@ -1,0 +1,25 @@
+--Пример создания VIEW
+
+CREATE OR REPLACE VIEW smth_ex AS
+SELECT order_date, required_date, shipped_date, ship_postal_code, company_name, contact_name, phone, last_name, first_name, title
+FROM orders
+JOIN customers USING(customer_id)
+JOIN employees USING(employee_id)
+WHERE order_date > '1997-01-01';
+
+
+--Пример 2
+
+CREATE VIEW smth_ex2 AS
+SELECT *
+FROM orders
+WHERE discontinued != 1
+WITH LOCAL CHECK OPTION;
+
+
+--Пример 3
+
+CREATE VIEW product_suppliers AS
+SELECT *
+FROM orders
+WHERE freight > 100;
