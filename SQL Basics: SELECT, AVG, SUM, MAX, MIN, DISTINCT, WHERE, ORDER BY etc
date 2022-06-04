@@ -1,0 +1,20 @@
+--
+SELECT DISTINCT city, country
+FROM customers
+
+
+--Выбрать данные со строной отправки Франция, Америка и Испания
+SELECT *
+FROM orders 
+WHERE ship_country IN('France','Spain','USA')
+ORDER BY ship_country
+
+--Найти среднее значение дней уходящих на доставку с формирования заказа 
+SELECT AVG(shipped_date - order_date)
+FROM orders
+WHERE ship_country = 'USA'
+
+--Найти сумму на которую имеется товаров
+SELECT SUM(units_in_stock * unit_price)
+FROM products
+WHERE discontinued = 0
