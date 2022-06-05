@@ -1,0 +1,23 @@
+--Пример использования CTE
+
+WITH customer_countries AS
+(
+  SELECT country 
+  FROM customers
+)
+SELECT company_name
+FROM suppliers
+WHERE country IN (SELECT * FROM customer_countries);
+
+-- Пример #2
+WITH smt_countries AS
+(
+  SELECT product_id
+    FROM products
+    JOIN order_details USING(product_id)
+    JOIN orders USING(order_id)
+    JOIN suppliers USING(supplier_id)
+    WHERE order_date BETWEEN '1994-01-01' AND '1994-01-04'
+)
+SELECT company_name FROM suppliers
+WHERE NOT EXISTS (SELECT * FROM smt_countries)
