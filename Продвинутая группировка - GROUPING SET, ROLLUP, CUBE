@@ -1,0 +1,34 @@
+--Вывести сумму продаж (цена * кол-во) по каждому сотруднику с подсчётом полного итога (полной суммы по всем сотрудникам) 
+--отсортировав по сумме продаж (по убыванию).
+
+SELECT employee_id, SUM(quantity * unit_price) AS total
+FROM orders
+LEFT JOIN order_details USING(order_id)
+JOIN employees USING(employee_id)
+GROUP BY ROLLUP (employee_id)
+ORDER BY total DESC;
+
+--Вывести отчёт показывающий сумму продаж по сотрудникам и странам отгрузки с подытогами по сотрудникам и общим итогом.
+
+SELECT employee_id, ship_country, SUM(quantity * unit_price) AS total
+FROM orders
+LEFT JOIN order_details USING(order_id)
+JOIN employees USING(employee_id)
+GROUP BY ROLLUP (employee_id, ship_country)
+ORDER BY employee_id, total DESC
+
+--Пример дополнительный
+SELECT supplier_id, COALESCE (product_name, 'Unknown'), category_id, SUM(units_in_stock)
+FROM products
+GROUP BY ROLLUP (supplier_id, product_name, category_id)
+ORDER BY supplier_id, category_id NULLS FIRST;
+
+--Вывести отчёт показывающий сумму продаж по сотрудникам, странам отгрузки, 
+--сотрудникам и странам отгрузки с подытогами по сотрудникам и общим итогом.
+
+SELECT employee_id, ship_country, SUM(quantity * unit_price) AS total
+FROM orders 
+LEFT JOIN order_details USING (order_id)
+JOIN employees USING(employee_id)
+GROUP BY CUBE (employee_id, ship_country)
+ORDER BY employee_id, total DESC;
