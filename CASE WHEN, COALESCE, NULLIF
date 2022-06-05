@@ -1,3 +1,4 @@
+--Пример #2
 
 SELECT product_name, unit_price, CASE 
   WHEN unit_price > 100 THEN 'too expensive'
@@ -6,6 +7,18 @@ SELECT product_name, unit_price, CASE
  END AS flow
  FROM products
  ORDER BY unit_price
+
+--Пример #2
+
+SELECT order_id, order_date, 
+  CASE WHEN date_part('month', order_date) BETWEEN 3 AND 5 THEN 'spring'
+       WHEN date_part('month', order_date) BETWEEN 6 AND 8 THEN 'summer'
+       WHEN date_part('month', order_date) BETWEEN 9 AND 11 THEN 'autumn'
+       WHEN date_part('month', order_date) IN (12, 1, 2) THEN 'winter'
+       ELSE 'UNKNOWN'
+       END AS season
+FROM orders 
+ORDER BY order_date;
 
 --Найти заказчиков, не сделавших ни одного заказа. Вывести имя заказчика и значение 'no orders' если order_id = NULL.
 
